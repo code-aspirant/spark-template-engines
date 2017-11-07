@@ -16,8 +16,11 @@
  */
 package spark.template.handlebars;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import com.github.jknack.handlebars.Helper;
 
 import org.eclipse.jetty.io.RuntimeIOException;
 
@@ -75,6 +78,18 @@ public class HandlebarsTemplateEngine extends TemplateEngine {
             Template template = handlebars.compile(viewName);
             return template.apply(modelAndView.getModel());
         } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        }
+    }
+
+    public <T> Handlebars registerHelper(String name, Helper<T> helper) {
+        return this.handlebars.registerHelper(name, helper);
+    }
+
+    public Handlebars registerHelpers(File file) {
+        try {
+            return this.handlebars.registerHelpers(file);
+        } catch (Exception e) {
             throw new RuntimeIOException(e);
         }
     }
